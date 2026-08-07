@@ -1,102 +1,134 @@
-import sys
+"""
+engine/label_engine.py
+Shared core engine used by every label type (inner, outer, ...).
+Takes a FIXED template PDF + one Excel row -> returns a filled PDF (bytes).
+
+Field config entry:
+{
+    "name": "Excel_Column_Name",
+    "type": "text" | "barcode" | "qr",
+    "x": 10, "y": 20,                 # position in PDF points, top-left origin
+    "font_size": 8,                   # text only
+    "prefix": "Style: ",              # optional, text only
+    "suffix": "",                     # optional, text only
+    "cover": [x0, y0, x1, y1],        # optional: white-out a placeholder area first
+    "width": 100, "height": 30,       # barcode only
+    "size": 60,                       # qr only
+    "font": "arial",                  # optional, key into FONTS dict below
+}
+"""
+
+import io
 import os
-sys.path.append(os.path.dirname(__file__))
+import fitz  # PyMuPDF
+import qrcode
+import barcode
+from barcode.writer import ImageWriter
 
-import json
-import pandas as pd
-import streamlit as st
-import fitz
+# Map a short font key -> ttf file path. Drop real font files into /fonts and
+# list them here for exact brand-font matching. Falls back to built-in Helvetica
+# if the file isn't found, so this is fully optional.
+FONTS_DIR = os.path.join(os.path.dirname(__file__), "..", "fonts")
+FONTS = {
+    "arial": os.path.join(FONTS_DIR, "arial.ttf"),
+    "arial_bold": os.path.join(FONTS_DIR, "arialbd.ttf"),
+    "tahoma": os.path.join(FONTS_DIR, "tahoma.ttf"),
+}
 
-from engine.label_engine import fill_single_label, generate_multipage_pdf
-from labels.inner_label import TEMPLATE_PATH, CONFIG_PATH, load_field_config
+# PyMuPDF built-in fonts — always available, no file needed
+BUILTIN_FONTS = {
+    "helv": "helv",        # Helvetica
+    "hebo": "hebo",        # Helvetica-Bold
+    "heit": "heit",        # Helvetica-Oblique
+    "cour": "cour",        # Courier
+    "tiro": "tiro",        # Times Roman
+}
 
-st.set_page_config(page_title="Inner Label Generator", layout="wide")
-st.title("🏷️ Inner Label Generator (70mm x 50mm)")
-st.caption("Step 1: Inner label only. Outer label will be added as a separate step.")
 
-excel_file = st.file_uploader("Upload Excel data", type=["xlsx", "xls"])
-if not excel_file:
-    st.info("Upload an Excel file to continue (or use data/sample_data.xlsx to test).")
-    st.stop()
+def _make_qr_image(data: str) -> bytes:
+    img = qrcode.make(str(data))
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    return buf.getvalue()
 
-df = pd.read_excel(excel_file)
-st.success(f"Loaded {len(df)} rows")
-with st.expander("📋 Excel data preview"):
-    st.dataframe(df, use_container_width=True)
 
-first_row = df.iloc[0].to_dict()
+def _make_barcode_image(data: str) -> bytes:
+    CODE128 = barcode.get_barcode_class("code128")
+    buf = io.BytesIO()
+    writer = ImageWriter()
+    writer.set_options({"write_text": False, "quiet_zone": 1})
+    CODE128(str(data), writer=writer).write(buf)
+    return buf.getvalue()
 
-# ---------------- Live field position / font size editor ----------------
-st.subheader("🎛️ Adjust position & font size")
-st.caption("x, y = position in points (top-left origin). font_size in points. "
-           "Change a value → preview updates instantly below.")
 
-if "field_config" not in st.session_state:
-    st.session_state.field_config = load_field_config()
+def _clean(value):
+    if value is None or (isinstance(value, float) and value != value):  # NaN
+        return ""
+    return str(value)
 
-# Only text/barcode fields are editable here (cover/prefix stay as configured)
-editable_rows = []
-for f in st.session_state.field_config:
-    editable_rows.append({
-        "name": f["name"],
-        "type": f.get("type", "text"),
-        "x": f.get("x", 0),
-        "y": f.get("y", 0),
-        "font_size": f.get("font_size", ""),
-        "prefix": f.get("prefix", ""),
-    })
-edit_df = pd.DataFrame(editable_rows)
 
-edited = st.data_editor(
-    edit_df,
-    use_container_width=True,
-    disabled=["name", "type"],  # name/type stay fixed, only position/size editable
-    hide_index=True,
-    key="field_editor",
-)
+def fill_single_label(template_path: str, row: dict, field_config: list) -> bytes:
+    """Fill ONE label (one Excel row) onto a copy of the template. Returns PDF bytes."""
+    doc = fitz.open(template_path)
+    page = doc[0]
 
-# merge edits back into full field_config (keep cover/width/height untouched)
-new_config = []
-for original, (_, row) in zip(st.session_state.field_config, edited.iterrows()):
-    updated = dict(original)
-    updated["x"] = float(row["x"])
-    updated["y"] = float(row["y"])
-    if updated.get("type") == "text":
-        updated["font_size"] = float(row["font_size"]) if row["font_size"] != "" else 8
-        updated["prefix"] = row["prefix"]
-    new_config.append(updated)
-st.session_state.field_config = new_config
+    for field in field_config:
+        name = field["name"]
+        if name not in row:
+            continue
+        value = _clean(row[name])
 
-col1, col2 = st.columns(2)
-with col1:
-    st.download_button(
-        "💾 Download updated field_mapping.json",
-        data=json.dumps(new_config, indent=2),
-        file_name="inner_field_mapping.json",
-        mime="application/json",
-    )
-with col2:
-    st.caption("⬆️ Download this and replace `config/inner_field_mapping.json` "
-               "in your GitHub repo to make changes permanent.")
+        x, y = field["x"], field["y"]
+        ftype = field.get("type", "text")
 
-# ---------------- Live preview ----------------
-st.subheader("👁️ Live Preview (row 1)")
-preview_bytes = fill_single_label(TEMPLATE_PATH, first_row, new_config)
-doc = fitz.open("pdf", preview_bytes)
-pix = doc[0].get_pixmap(matrix=fitz.Matrix(5, 5))
-st.image(pix.tobytes("png"), width=550)
-doc.close()
+        cover = field.get("cover")
+        if cover:
+            page.draw_rect(fitz.Rect(*cover), color=None, fill=(1, 1, 1))
 
-# ---------------- Generate all ----------------
-st.subheader("🚀 Generate All Inner Labels")
-if st.button("Generate PDF", type="primary"):
-    rows = df.to_dict(orient="records")
-    with st.spinner(f"Generating {len(rows)} inner labels..."):
-        final_pdf = generate_multipage_pdf(TEMPLATE_PATH, rows, new_config)
-    st.success(f"Done — {len(rows)} inner labels generated.")
-    st.download_button(
-        "⬇️ Download Inner Labels PDF",
-        data=final_pdf,
-        file_name="inner_labels.pdf",
-        mime="application/pdf",
-    )
+        if ftype == "text":
+            font_size = field.get("font_size", 8)
+            color = field.get("color", [0, 0, 0])
+            color = tuple(c / 255 if c > 1 else c for c in color)
+            text_out = field.get("prefix", "") + value + field.get("suffix", "")
+
+            font_key = field.get("font", "helv")
+            fontname = "helv"
+            fontfile = None
+            if font_key in FONTS and os.path.exists(FONTS[font_key]):
+                fontname = font_key
+                fontfile = FONTS[font_key]
+            elif font_key in BUILTIN_FONTS:
+                fontname = BUILTIN_FONTS[font_key]
+
+            page.insert_text(
+                (x, y), text_out, fontsize=font_size, color=color,
+                fontname=fontname, fontfile=fontfile,
+            )
+
+        elif ftype == "qr":
+            size = field.get("size", 60)
+            img_bytes = _make_qr_image(value)
+            page.insert_image(fitz.Rect(x, y, x + size, y + size), stream=img_bytes)
+
+        elif ftype == "barcode":
+            w = field.get("width", 150)
+            h = field.get("height", 40)
+            img_bytes = _make_barcode_image(value)
+            page.insert_image(fitz.Rect(x, y, x + w, y + h), stream=img_bytes)
+
+    out = doc.tobytes()
+    doc.close()
+    return out
+
+
+def generate_multipage_pdf(template_path: str, rows: list, field_config: list) -> bytes:
+    """rows = list of dicts (each dict = one Excel row). Returns single merged multi-page PDF."""
+    merged = fitz.open()
+    for row in rows:
+        single_bytes = fill_single_label(template_path, row, field_config)
+        single_doc = fitz.open("pdf", single_bytes)
+        merged.insert_pdf(single_doc)
+        single_doc.close()
+    out = merged.tobytes()
+    merged.close()
+    return out
