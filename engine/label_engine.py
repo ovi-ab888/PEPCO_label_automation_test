@@ -35,6 +35,15 @@ FONTS = {
     "tahoma": os.path.join(FONTS_DIR, "tahoma.ttf"),
 }
 
+# PyMuPDF built-in fonts — always available, no file needed
+BUILTIN_FONTS = {
+    "helv": "helv",        # Helvetica
+    "hebo": "hebo",        # Helvetica-Bold
+    "heit": "heit",        # Helvetica-Oblique
+    "cour": "cour",        # Courier
+    "tiro": "tiro",        # Times Roman
+}
+
 
 def _make_qr_image(data: str) -> bytes:
     img = qrcode.make(str(data))
@@ -82,12 +91,14 @@ def fill_single_label(template_path: str, row: dict, field_config: list) -> byte
             color = tuple(c / 255 if c > 1 else c for c in color)
             text_out = field.get("prefix", "") + value + field.get("suffix", "")
 
-            font_key = field.get("font")
+            font_key = field.get("font", "helv")
             fontname = "helv"
             fontfile = None
-            if font_key and os.path.exists(FONTS.get(font_key, "")):
+            if font_key in FONTS and os.path.exists(FONTS[font_key]):
                 fontname = font_key
                 fontfile = FONTS[font_key]
+            elif font_key in BUILTIN_FONTS:
+                fontname = BUILTIN_FONTS[font_key]
 
             page.insert_text(
                 (x, y), text_out, fontsize=font_size, color=color,
