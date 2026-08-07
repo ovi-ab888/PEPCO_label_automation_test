@@ -1,0 +1,21 @@
+[
+  {"name": "Barcode_st1", "type": "barcode", "x": 37, "y": 6, "width": 116, "height": 14},
+
+  {"name": "Product_name", "type": "text", "x": 8, "y": 30, "font_size": 9.4,
+   "cover": [7.5, 20.5, 156, 33]},
+
+  {"name": "Style", "type": "text", "x": 8, "y": 44, "font_size": 8, "prefix": "Style: "},
+
+  {"name": "TC_Number_st1", "type": "text", "x": 8, "y": 57, "font_size": 8, "prefix": "TC - ",
+   "cover": [66, 33, 180, 48]},
+
+  {"name": "Inner_kg", "type": "text", "x": 8, "y": 70, "font_size": 8, "prefix": "Kg: "},
+
+  {"name": "Season_st", "type": "text", "x": 8, "y": 83, "font_size": 8, "prefix": "Season: "},
+
+  {"name": "Inner_qty", "type": "text", "x": 8, "y": 96, "font_size": 8, "prefix": "Qty: "},
+
+  {"name": "Pictogram", "type": "text", "x": 8, "y": 109, "font_size": 8, "prefix": "Pictogram: "},
+
+  {"name": "Promotional", "type": "text", "x": 100, "y": 109, "font_size": 8, "prefix": "Promo: "}
+]
