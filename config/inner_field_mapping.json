@@ -1,91 +1,12 @@
 [
-  {
-    "name": "Style",
-    "type": "text",
-    "x": 93.0,
-    "y": 32.0,
-    "font_size": 9.4,
-    "font": "helv",
-    "prefix": ""
-  },
-  {
-    "name": "TC_Number_st1",
-    "type": "text",
-    "x": 88.0,
-    "y": 45.0,
-    "font_size": 9.4,
-    "font": "helv",
-    "prefix": ""
-  },
-  {
-    "name": "Product_name",
-    "type": "text",
-    "x": 40.0,
-    "y": 17.0,
-    "font_size": 9.0,
-    "font": "helv_bold_oblique",
-    "prefix": ""
-  },
-  {
-    "name": "Pictogram",
-    "type": "text",
-    "x": 6.0,
-    "y": 29.0,
-    "font_size": 30.0,
-    "font": "pepco_ovi",
-    "prefix": ""
-  },
-  {
-    "name": "Promotional",
-    "type": "text",
-    "x": 156.0,
-    "y": 33.0,
-    "font_size": 36.0,
-    "font": "pepco_ovi",
-    "prefix": ""
-  },
-  {
-    "name": "Barcode_st1",
-    "type": "barcode",
-    "x": 37.0,
-    "y": 70.0,
-    "width": 118,
-    "height": 44
-  },
-  {
-    "name": "Barcode_st1",
-    "type": "text",
-    "x": 49.0,
-    "y": 118.0,
-    "font_size": 13.0,
-    "font": "helv",
-    "prefix": ""
-  },
-  {
-    "name": "Inner_qty",
-    "type": "text",
-    "x": 48.0,
-    "y": 134.0,
-    "font_size": 9.4,
-    "font": "helv",
-    "prefix": ""
-  },
-  {
-    "name": "Season_st",
-    "type": "text",
-    "x": 96.0,
-    "y": 134.0,
-    "font_size": 9.4,
-    "font": "helv",
-    "prefix": ""
-  },
-  {
-    "name": "Inner_kg",
-    "type": "text",
-    "x": 142.0,
-    "y": 134.0,
-    "font_size": 7.5,
-    "font": "helv",
-    "prefix": ""
-  }
+  {"name": "Style", "type": "text", "x": 93.0, "y": 32.0, "font_size": 9.4, "font": "helv", "prefix": ""},
+  {"name": "TC_Number_st1", "type": "text", "x": 88.0, "y": 45.0, "font_size": 9.4, "font": "helv", "prefix": ""},
+  {"name": "Product_name", "type": "text", "x": 40.0, "y": 17.0, "font_size": 9.0, "font": "helv_bold_oblique", "prefix": ""},
+  {"name": "Pictogram", "type": "text", "x": 6.0, "y": 29.0, "font_size": 30.0, "font": "pepco_ovi", "prefix": ""},
+  {"name": "Promotional", "type": "text", "x": 156.0, "y": 33.0, "font_size": 36.0, "font": "pepco_ovi", "prefix": ""},
+  {"name": "Barcode_st1", "type": "barcode", "x": 37.0, "y": 70.0, "width": 118, "height": 44, "barcode_type": "ean13"},
+  {"name": "Barcode_st1", "type": "text", "x": 49.0, "y": 118.0, "font_size": 13.0, "font": "helv", "prefix": ""},
+  {"name": "Inner_qty", "type": "text", "x": 48.0, "y": 134.0, "font_size": 9.4, "font": "helv", "prefix": ""},
+  {"name": "Season_st", "type": "text", "x": 96.0, "y": 134.0, "font_size": 9.4, "font": "helv", "prefix": ""},
+  {"name": "Inner_kg", "type": "text", "x": 142.0, "y": 134.0, "font_size": 7.5, "font": "helv", "prefix": ""}
 ]
