@@ -33,6 +33,8 @@ FONTS = {
     "arial": os.path.join(FONTS_DIR, "arial.ttf"),
     "arial_bold": os.path.join(FONTS_DIR, "arialbd.ttf"),
     "tahoma": os.path.join(FONTS_DIR, "tahoma.ttf"),
+    "helv_bold_oblique": os.path.join(FONTS_DIR, "Helvetica_Bold_Oblique.ttf"),
+    "pepco_ovi": os.path.join(FONTS_DIR, "PEPCO_Ovi.ttf"),
 }
 
 # PyMuPDF built-in fonts — always available, no file needed
