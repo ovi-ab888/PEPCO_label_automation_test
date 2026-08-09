@@ -31,7 +31,7 @@
     "type": "text",
     "x": 7.0,
     "y": 28.0,
-    "font_size": 24.0,
+    "font_size": 30.0,
     "font": "pepco_ovi",
     "prefix": ""
   },
@@ -40,7 +40,7 @@
     "type": "text",
     "x": 160.0,
     "y": 32.0,
-    "font_size": 24.0,
+    "font_size": 36.0,
     "font": "pepco_ovi",
     "prefix": ""
   },
@@ -57,7 +57,7 @@
     "type": "text",
     "x": 50.0,
     "y": 118.0,
-    "font_size": 11.0,
+    "font_size": 13.0,
     "font": "helv",
     "prefix": ""
   },
