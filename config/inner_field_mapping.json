@@ -49,7 +49,7 @@
     "type": "barcode",
     "x": 50.0,
     "y": 50.0,
-    "width": 275,
+    "width": 273,
     "barcode_type": "ean13_vector",
     "color": [
       0,
