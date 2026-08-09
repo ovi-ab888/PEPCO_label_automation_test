@@ -1,21 +1,91 @@
 [
-  {"name": "Style", "type": "text", "x": 92, "y": 32, "font_size": 9.4, "font": "hebo"},
-
-  {"name": "TC_Number_st1", "type": "text", "x": 87, "y": 46, "font_size": 9.4},
-
-  {"name": "Product_name", "type": "text", "x": 40, "y": 17, "font_size": 9, "font": "helv_bold_oblique"},
-
-  {"name": "Pictogram", "type": "text", "x": 3, "y": 64, "font_size": 30, "font": "pepco_ovi"},
-
-  {"name": "Promotional", "type": "text", "x": 152, "y": 64, "font_size": 36, "font": "pepco_ovi"},
-
-  {"name": "Barcode_st1", "type": "barcode", "x": 37, "y": 50, "width": 118, "height": 44},
-
-  {"name": "Barcode_st1", "type": "text", "x": 48, "y": 111, "font_size": 13},
-
-  {"name": "Inner_qty", "type": "text", "x": 48, "y": 128, "font_size": 9.4},
-
-  {"name": "Season_st", "type": "text", "x": 96, "y": 128, "font_size": 9.4},
-
-  {"name": "Inner_kg", "type": "text", "x": 141, "y": 130, "font_size": 7.5}
+  {
+    "name": "Style",
+    "type": "text",
+    "x": 92.0,
+    "y": 32.0,
+    "font_size": 9.4,
+    "font": "helv",
+    "prefix": ""
+  },
+  {
+    "name": "TC_Number_st1",
+    "type": "text",
+    "x": 87.0,
+    "y": 46.0,
+    "font_size": 9.4,
+    "font": "helv",
+    "prefix": ""
+  },
+  {
+    "name": "Product_name",
+    "type": "text",
+    "x": 40.0,
+    "y": 17.0,
+    "font_size": 9,
+    "font": "helv_bold_oblique",
+    "prefix": ""
+  },
+  {
+    "name": "Pictogram",
+    "type": "text",
+    "x": 7.0,
+    "y": 28.0,
+    "font_size": 24.0,
+    "font": "pepco_ovi",
+    "prefix": ""
+  },
+  {
+    "name": "Promotional",
+    "type": "text",
+    "x": 160.0,
+    "y": 32.0,
+    "font_size": 24.0,
+    "font": "pepco_ovi",
+    "prefix": ""
+  },
+  {
+    "name": "Barcode_st1",
+    "type": "barcode",
+    "x": 37.0,
+    "y": 70.0,
+    "width": 118,
+    "height": 44
+  },
+  {
+    "name": "Barcode_st1",
+    "type": "text",
+    "x": 50.0,
+    "y": 118.0,
+    "font_size": 11.0,
+    "font": "helv",
+    "prefix": ""
+  },
+  {
+    "name": "Inner_qty",
+    "type": "text",
+    "x": 48.0,
+    "y": 134.0,
+    "font_size": 9.4,
+    "font": "helv",
+    "prefix": ""
+  },
+  {
+    "name": "Season_st",
+    "type": "text",
+    "x": 96.0,
+    "y": 134.0,
+    "font_size": 9.4,
+    "font": "helv",
+    "prefix": ""
+  },
+  {
+    "name": "Inner_kg",
+    "type": "text",
+    "x": 142.0,
+    "y": 134.0,
+    "font_size": 7.5,
+    "font": "helv",
+    "prefix": ""
+  }
 ]
