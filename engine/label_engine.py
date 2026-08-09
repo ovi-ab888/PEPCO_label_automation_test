@@ -54,13 +54,11 @@ def _make_qr_image(data: str) -> bytes:
     return buf.getvalue()
 
 
-def _make_barcode_image(data: str, barcode_type: str = "code128") -> bytes:
+def _make_barcode_image(data: str, barcode_type: str = "code128", color_hex: str = "#000000",
+                         guard_height_factor: float = 1.0, show_small_text: bool = False) -> bytes:
     data = str(data).strip()
 
     if barcode_type == "ean13":
-        # EAN13 needs exactly 12 digits (checksum is auto-calculated as the 13th).
-        # If we were given a full 13-digit code, drop the last digit and let the
-        # library recompute+verify the checksum; pad/trim if the data is dirty.
         digits = "".join(ch for ch in data if ch.isdigit())
         if len(digits) >= 13:
             digits = digits[:12]
@@ -76,9 +74,118 @@ def _make_barcode_image(data: str, barcode_type: str = "code128") -> bytes:
 
     buf = io.BytesIO()
     writer = ImageWriter()
-    writer.set_options({"write_text": False, "quiet_zone": 1})
-    BARCODE_CLASS(code_input, writer=writer).write(buf)
+    # NOTE: options must be passed to write(), not just the writer constructor.
+    # guard_height_factor (taller start/center/end guard bars, standard EAN13
+    # look) only takes visual effect when write_text is True — the library ties
+    # the guard-bar extension to the reserved text-baseline area.
+    options = {
+        "write_text": show_small_text,
+        "quiet_zone": 1,
+        "foreground": color_hex,
+        "guard_height_factor": guard_height_factor,
+        "font_size": 8,
+        "text_distance": 3,
+    }
+    BARCODE_CLASS(code_input, writer=writer).write(buf, options)
     return buf.getvalue()
+
+
+def _ean13_checksum(code12: str) -> int:
+    total = 0
+    for j, ch in enumerate(code12):
+        weight = 1 if j % 2 == 0 else 3
+        total += int(ch) * weight
+    import math
+    return math.ceil(total / 10) * 10 - total
+
+
+# --- Exact EAN13 bar-position tables, ported 1:1 from the Illustrator JSX ---
+_EAN_L = {
+    "0": [3, 2, 6, 1], "1": [2, 2, 6, 1], "2": [2, 1, 5, 2], "3": [1, 4, 6, 1], "4": [1, 1, 5, 2],
+    "5": [1, 2, 6, 1], "6": [1, 1, 3, 4], "7": [1, 3, 5, 2], "8": [1, 2, 4, 3], "9": [3, 1, 5, 2],
+}
+_EAN_G = {
+    "0": [1, 1, 4, 3], "1": [1, 2, 5, 2], "2": [2, 2, 5, 2], "3": [1, 1, 6, 1], "4": [2, 3, 6, 1],
+    "5": [1, 3, 6, 1], "6": [4, 1, 6, 1], "7": [2, 1, 6, 1], "8": [3, 1, 6, 1], "9": [2, 1, 4, 3],
+}
+_EAN_DICT_L = {
+    "0": "LLLLLL", "1": "LLGLGG", "2": "LLGGLG", "3": "LLGGGL", "4": "LGLLGG",
+    "5": "LGGLLG", "6": "LGGGLL", "7": "LGLGLG", "8": "LGLGGL", "9": "LGGLGL",
+}
+_EAN_DICT_R = {
+    "sep": [1, 1, 3, 1],
+    "0": [0, 3, 5, 1], "1": [0, 2, 4, 2], "2": [0, 2, 3, 2], "3": [0, 1, 5, 1], "4": [0, 1, 2, 3],
+    "5": [0, 1, 3, 3], "6": [0, 1, 2, 1], "7": [0, 1, 4, 1], "8": [0, 1, 3, 1], "9": [0, 3, 4, 1],
+}
+
+
+def draw_ean13_vector(page, x0, y0, code13, target_width, color=(0, 0, 0),
+                       height_ratio=0.168, block_ratio=0.00472, guard_extra=1.15):
+    """
+    Draw a 13-digit EAN13 barcode as real vector rectangles directly on the PDF
+    page — same bar-position math as the Illustrator JSX (CreateBarcodeBars),
+    so the proportions match exactly. Guard bars (start, center, end) render
+    `guard_extra`x taller than the data bars, top-aligned at y0 (taller ones
+    extend further down) — this is what makes it read as a proper EAN13
+    symbol instead of a flat block of bars.
+
+    x0, y0        = top-left of the barcode in PDF points (page coords)
+    target_width  = desired total barcode width in points
+    Returns (total_width_drawn, tall_bar_height) for layout purposes.
+    """
+    code13 = "".join(ch for ch in str(code13) if ch.isdigit())
+    if len(code13) < 13:
+        code13 = code13.zfill(12)
+        code13 += str(_ean13_checksum(code13))
+    code13 = code13[:13]
+
+    height = target_width * height_ratio
+    block = target_width * block_ratio
+    gap_d = block * 7
+    tall_h = height * guard_extra
+
+    state = {"x": 0.0}
+
+    def add_rect(x_off, w_mult, h):
+        rx = x0 + state["x"] + block * x_off
+        rw = block * w_mult
+        if rw <= 0:
+            return
+        rect = fitz.Rect(rx, y0, rx + rw, y0 + h)
+        page.draw_rect(rect, color=None, fill=color)
+
+    def draw_sep(h):
+        p = _EAN_DICT_R["sep"]
+        add_rect(p[0], p[1], h)
+        add_rect(p[2], p[3], h)
+
+    def draw_right_digit(ch, h):
+        p = _EAN_DICT_R[ch]
+        add_rect(p[0], p[1], h)
+        add_rect(p[2], p[3], h)
+
+    def draw_left_group(content, h):
+        pattern = _EAN_DICT_L[content[0]]
+        for i in range(1, len(content)):
+            lg = pattern[i - 1]
+            params = _EAN_L[content[i]] if lg == "L" else _EAN_G[content[i]]
+            add_rect(params[0], params[1], h)
+            add_rect(params[2], params[3], h)
+            state["x"] += gap_d
+
+    draw_sep(tall_h)                              # start guard (tall)
+    state["x"] += block * 4
+    draw_left_group(code13[0:7], height)          # digits 1-6, normal height
+    draw_sep(tall_h)                              # center guard (tall)
+    state["x"] += block * 5
+    for j in range(7, 12):                        # digits 7-11, normal height
+        draw_right_digit(code13[j], height)
+        state["x"] += gap_d
+    draw_right_digit(code13[12], height)          # checksum digit, normal height
+    state["x"] += block * 6
+    draw_sep(tall_h)                              # end guard (tall)
+
+    return state["x"], tall_h
 
 
 def _clean(value):
@@ -131,11 +238,30 @@ def fill_single_label(template_path: str, row: dict, field_config: list) -> byte
             page.insert_image(fitz.Rect(x, y, x + size, y + size), stream=img_bytes)
 
         elif ftype == "barcode":
-            w = field.get("width", 150)
-            h = field.get("height", 40)
             barcode_type = field.get("barcode_type", "code128")
-            img_bytes = _make_barcode_image(value, barcode_type)
-            page.insert_image(fitz.Rect(x, y, x + w, y + h), stream=img_bytes)
+            color = field.get("color", [0, 0, 0])
+            color = tuple(c / 255 if c > 1 else c for c in color)
+
+            if barcode_type == "ean13_vector":
+                # Exact vector match to the Illustrator JSX — draws real bars,
+                # not an image. width = total barcode width in points.
+                w = field.get("width", 150)
+                draw_ean13_vector(
+                    page, x, y, value, w, color=color,
+                    height_ratio=field.get("height_ratio", 0.168),
+                    block_ratio=field.get("block_ratio", 0.00472),
+                    guard_extra=field.get("guard_extra", 1.15),
+                )
+            else:
+                w = field.get("width", 150)
+                h = field.get("height", 40)
+                color_hex = field.get("color_hex", "#000000")
+                guard_height_factor = field.get("guard_height_factor", 1.0)
+                show_small_text = field.get("show_small_text", False)
+                img_bytes = _make_barcode_image(
+                    value, barcode_type, color_hex, guard_height_factor, show_small_text
+                )
+                page.insert_image(fitz.Rect(x, y, x + w, y + h), stream=img_bytes)
 
     out = doc.tobytes()
     doc.close()
