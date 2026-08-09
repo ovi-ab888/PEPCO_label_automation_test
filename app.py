@@ -44,10 +44,10 @@ for f in st.session_state.field_config:
     editable_rows.append({
         "name": f["name"],
         "type": f.get("type", "text"),
-        "x": f.get("x", 0),
-        "y": f.get("y", 0),
-        "font_size": f.get("font_size", ""),
-        "font": f.get("font", "helv"),
+        "x": float(f.get("x", 0)),
+        "y": float(f.get("y", 0)),
+        "font_size": float(f.get("font_size", 8)),  # barcode rows get a harmless default too,
+        "font": f.get("font", "helv"),               # keeps this column purely numeric
         "prefix": f.get("prefix", ""),
     })
 edit_df = pd.DataFrame(editable_rows)
@@ -59,6 +59,9 @@ edited = st.data_editor(
     hide_index=True,
     key="field_editor",
     column_config={
+        "x": st.column_config.NumberColumn(step=1.0),
+        "y": st.column_config.NumberColumn(step=1.0),
+        "font_size": st.column_config.NumberColumn(step=0.5, min_value=1.0),
         "font": st.column_config.SelectboxColumn(
             options=FONT_OPTIONS,
             help="helv=Helvetica, hebo=Helvetica-Bold, heit=Helvetica-Italic, "
@@ -75,7 +78,7 @@ for original, (_, row) in zip(st.session_state.field_config, edited.iterrows()):
     updated["x"] = float(row["x"])
     updated["y"] = float(row["y"])
     if updated.get("type") == "text":
-        updated["font_size"] = float(row["font_size"]) if row["font_size"] != "" else 8
+        updated["font_size"] = float(row["font_size"])
         updated["font"] = row["font"]
         updated["prefix"] = row["prefix"]
     new_config.append(updated)
