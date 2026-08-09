@@ -51,11 +51,6 @@
     "y": 50.0,
     "width": 264,
     "barcode_type": "ean13_vector",
-    "color": [
-      0,
-      0,
-      0
-    ],
     "height_ratio": 0.168,
     "block_ratio": 0.00472,
     "guard_extra": 1.15
