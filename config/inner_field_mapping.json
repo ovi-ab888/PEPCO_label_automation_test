@@ -1,21 +1,21 @@
 [
-  {"name": "Barcode_st1", "type": "barcode", "x": 37, "y": 6, "width": 116, "height": 14},
+  {"name": "Style", "type": "text", "x": 92, "y": 32, "font_size": 9.4, "font": "hebo"},
 
-  {"name": "Product_name", "type": "text", "x": 8, "y": 30, "font_size": 9.4,
-   "cover": [7.5, 20.5, 156, 33]},
+  {"name": "TC_Number_st1", "type": "text", "x": 87, "y": 46, "font_size": 9.4},
 
-  {"name": "Style", "type": "text", "x": 8, "y": 44, "font_size": 8, "prefix": "Style: "},
+  {"name": "Product_name", "type": "text", "x": 40, "y": 17, "font_size": 8.5, "font": "helv_bold_oblique"},
 
-  {"name": "TC_Number_st1", "type": "text", "x": 8, "y": 57, "font_size": 8, "prefix": "TC - ",
-   "cover": [66, 33, 180, 48]},
+  {"name": "Pictogram", "type": "text", "x": 3, "y": 64, "font_size": 24, "font": "pepco_ovi"},
 
-  {"name": "Inner_kg", "type": "text", "x": 8, "y": 70, "font_size": 8, "prefix": "Kg: "},
+  {"name": "Promotional", "type": "text", "x": 152, "y": 64, "font_size": 24, "font": "pepco_ovi"},
 
-  {"name": "Season_st", "type": "text", "x": 8, "y": 83, "font_size": 8, "prefix": "Season: "},
+  {"name": "Barcode_st1", "type": "barcode", "x": 37, "y": 50, "width": 118, "height": 44},
 
-  {"name": "Inner_qty", "type": "text", "x": 8, "y": 96, "font_size": 8, "prefix": "Qty: "},
+  {"name": "Barcode_st1", "type": "text", "x": 48, "y": 111, "font_size": 11},
 
-  {"name": "Pictogram", "type": "text", "x": 8, "y": 109, "font_size": 8, "prefix": "Pictogram: "},
+  {"name": "Inner_qty", "type": "text", "x": 48, "y": 128, "font_size": 9.4},
 
-  {"name": "Promotional", "type": "text", "x": 100, "y": 109, "font_size": 8, "prefix": "Promo: "}
+  {"name": "Season_st", "type": "text", "x": 96, "y": 128, "font_size": 9.4},
+
+  {"name": "Inner_kg", "type": "text", "x": 141, "y": 130, "font_size": 7.5}
 ]
