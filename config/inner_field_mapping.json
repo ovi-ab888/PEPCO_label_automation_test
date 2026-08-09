@@ -47,7 +47,7 @@
   {
     "name": "Barcode_st1",
     "type": "barcode",
-    "x": 50.0,
+    "x": 36.0,
     "y": 50.0,
     "width": 273,
     "barcode_type": "ean13_vector",
