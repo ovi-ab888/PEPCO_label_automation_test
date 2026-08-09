@@ -54,12 +54,30 @@ def _make_qr_image(data: str) -> bytes:
     return buf.getvalue()
 
 
-def _make_barcode_image(data: str) -> bytes:
-    CODE128 = barcode.get_barcode_class("code128")
+def _make_barcode_image(data: str, barcode_type: str = "code128") -> bytes:
+    data = str(data).strip()
+
+    if barcode_type == "ean13":
+        # EAN13 needs exactly 12 digits (checksum is auto-calculated as the 13th).
+        # If we were given a full 13-digit code, drop the last digit and let the
+        # library recompute+verify the checksum; pad/trim if the data is dirty.
+        digits = "".join(ch for ch in data if ch.isdigit())
+        if len(digits) >= 13:
+            digits = digits[:12]
+        elif len(digits) == 12:
+            pass
+        else:
+            digits = digits.zfill(12)
+        BARCODE_CLASS = barcode.get_barcode_class("ean13")
+        code_input = digits
+    else:
+        BARCODE_CLASS = barcode.get_barcode_class("code128")
+        code_input = data
+
     buf = io.BytesIO()
     writer = ImageWriter()
     writer.set_options({"write_text": False, "quiet_zone": 1})
-    CODE128(str(data), writer=writer).write(buf)
+    BARCODE_CLASS(code_input, writer=writer).write(buf)
     return buf.getvalue()
 
 
@@ -115,7 +133,8 @@ def fill_single_label(template_path: str, row: dict, field_config: list) -> byte
         elif ftype == "barcode":
             w = field.get("width", 150)
             h = field.get("height", 40)
-            img_bytes = _make_barcode_image(value)
+            barcode_type = field.get("barcode_type", "code128")
+            img_bytes = _make_barcode_image(value, barcode_type)
             page.insert_image(fitz.Rect(x, y, x + w, y + h), stream=img_bytes)
 
     out = doc.tobytes()
