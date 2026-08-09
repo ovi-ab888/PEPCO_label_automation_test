@@ -3,15 +3,15 @@
 
   {"name": "TC_Number_st1", "type": "text", "x": 87, "y": 46, "font_size": 9.4},
 
-  {"name": "Product_name", "type": "text", "x": 40, "y": 17, "font_size": 8.5, "font": "helv_bold_oblique"},
+  {"name": "Product_name", "type": "text", "x": 40, "y": 17, "font_size": 9, "font": "helv_bold_oblique"},
 
-  {"name": "Pictogram", "type": "text", "x": 3, "y": 64, "font_size": 24, "font": "pepco_ovi"},
+  {"name": "Pictogram", "type": "text", "x": 3, "y": 64, "font_size": 30, "font": "pepco_ovi"},
 
-  {"name": "Promotional", "type": "text", "x": 152, "y": 64, "font_size": 24, "font": "pepco_ovi"},
+  {"name": "Promotional", "type": "text", "x": 152, "y": 64, "font_size": 36, "font": "pepco_ovi"},
 
   {"name": "Barcode_st1", "type": "barcode", "x": 37, "y": 50, "width": 118, "height": 44},
 
-  {"name": "Barcode_st1", "type": "text", "x": 48, "y": 111, "font_size": 11},
+  {"name": "Barcode_st1", "type": "text", "x": 48, "y": 111, "font_size": 13},
 
   {"name": "Inner_qty", "type": "text", "x": 48, "y": 128, "font_size": 9.4},
 
