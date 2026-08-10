@@ -6,7 +6,7 @@
     "y": 55.0,
     "font_size": 24.0,
     "font": "helv",
-    "prefix": "ITEM "
+    "prefix": ""
   },
   {
     "name": "TC_Number_st1",
@@ -15,7 +15,7 @@
     "y": 100.0,
     "font_size": 26.0,
     "font": "helv",
-    "prefix": "TC - "
+    "prefix": ""
   },
   {
     "name": "Barcode_st1",
@@ -44,7 +44,7 @@
     "y": 250.0,
     "font_size": 20.0,
     "font": "helv",
-    "prefix": "OUTER : ",
-    "suffix": " Inner"
+    "prefix": "",
+    "suffix": ""
   }
 ]
