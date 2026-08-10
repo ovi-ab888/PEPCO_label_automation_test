@@ -30,6 +30,7 @@ from barcode.writer import ImageWriter
 # if the file isn't found, so this is fully optional.
 FONTS_DIR = os.path.join(os.path.dirname(__file__), "..", "fonts")
 FONTS = {
+    "helv_bold": os.path.join(FONTS_DIR, "Helvetica Bold.ttf"),  # <--- Helvetica Bold.ttf যুক্ত করা হলো
     "arial": os.path.join(FONTS_DIR, "arial.ttf"),
     "arial_bold": os.path.join(FONTS_DIR, "arialbd.ttf"),
     "tahoma": os.path.join(FONTS_DIR, "tahoma.ttf"),
@@ -45,7 +46,6 @@ BUILTIN_FONTS = {
     "cour": "cour",        # Courier
     "tiro": "tiro",        # Times Roman
 }
-
 
 def _make_qr_image(data: str) -> bytes:
     img = qrcode.make(str(data))
