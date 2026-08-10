@@ -1,1 +1,50 @@
-
+[
+  {
+    "name": "Style",
+    "type": "text",
+    "x": 30.0,
+    "y": 55.0,
+    "font_size": 24.0,
+    "font": "hebo",
+    "prefix": "ITEM "
+  },
+  {
+    "name": "TC_Number_st1",
+    "type": "text",
+    "x": 30.0,
+    "y": 100.0,
+    "font_size": 26.0,
+    "font": "hebo",
+    "prefix": "TC - "
+  },
+  {
+    "name": "Barcode_st1",
+    "type": "barcode",
+    "x": 35.0,
+    "y": 120.0,
+    "width": 215,
+    "barcode_type": "ean13_vector",
+    "height_ratio": 0.22,
+    "block_ratio": 0.005,
+    "guard_extra": 1.15
+  },
+  {
+    "name": "Barcode_st1",
+    "type": "text",
+    "x": 75.0,
+    "y": 215.0,
+    "font_size": 16.0,
+    "font": "hebo",
+    "prefix": ""
+  },
+  {
+    "name": "Outer_qty",
+    "type": "text",
+    "x": 30.0,
+    "y": 250.0,
+    "font_size": 20.0,
+    "font": "hebo",
+    "prefix": "OUTER : ",
+    "suffix": " Inner"
+  }
+]
