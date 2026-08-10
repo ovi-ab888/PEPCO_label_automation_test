@@ -5,7 +5,7 @@
     "x": 30.0,
     "y": 55.0,
     "font_size": 24.0,
-    "font": "hebo",
+    "font": "helv",
     "prefix": "ITEM "
   },
   {
@@ -14,7 +14,7 @@
     "x": 30.0,
     "y": 100.0,
     "font_size": 26.0,
-    "font": "hebo",
+    "font": "helv",
     "prefix": "TC - "
   },
   {
@@ -34,7 +34,7 @@
     "x": 75.0,
     "y": 215.0,
     "font_size": 16.0,
-    "font": "hebo",
+    "font": "helv",
     "prefix": ""
   },
   {
@@ -43,7 +43,7 @@
     "x": 30.0,
     "y": 250.0,
     "font_size": 20.0,
-    "font": "hebo",
+    "font": "helv",
     "prefix": "OUTER : ",
     "suffix": " Inner"
   }
