@@ -2,19 +2,19 @@
   {
     "name": "Style",
     "type": "text",
-    "x": 30.0,
-    "y": 55.0,
-    "font_size": 24.0,
-    "font": "helv",
+    "x": 90.0,
+    "y": 35.0,
+    "font_size": 30.0,
+    "font": "helv_bold",
     "prefix": ""
   },
   {
     "name": "TC_Number_st1",
     "type": "text",
-    "x": 30.0,
-    "y": 100.0,
-    "font_size": 26.0,
-    "font": "helv",
+    "x": 83.0,
+    "y": 84.0,
+    "font_size": 30.0,
+    "font": "helv_bold",
     "prefix": ""
   },
   {
@@ -34,16 +34,16 @@
     "x": 75.0,
     "y": 215.0,
     "font_size": 16.0,
-    "font": "helv",
+    "font": "helv_bold",
     "prefix": ""
   },
   {
     "name": "Outer_qty",
     "type": "text",
-    "x": 30.0,
-    "y": 250.0,
-    "font_size": 20.0,
-    "font": "helv",
+    "x": 95.0,
+    "y": 265.0,
+    "font_size": 28.0,
+    "font": "helv_bold",
     "prefix": "",
     "suffix": ""
   }
