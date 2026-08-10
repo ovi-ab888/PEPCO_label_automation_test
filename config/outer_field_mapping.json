@@ -22,7 +22,7 @@
     "type": "barcode",
     "x": 20.0,
     "y": 100.0,
-    "width": 315,
+    "width": 370,
     "barcode_type": "ean13_vector",
     "height_ratio": 0.22,
     "block_ratio": 0.005,
