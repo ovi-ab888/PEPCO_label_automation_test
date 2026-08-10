@@ -24,7 +24,7 @@
     "y": 100.0,
     "width": 370,
     "barcode_type": "ean13_vector",
-    "height_ratio": 0.22,
+    "height_ratio": 0.3,
     "block_ratio": 0.005,
     "guard_extra": 1.15
   },
