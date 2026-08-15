@@ -30,7 +30,6 @@ from barcode.writer import ImageWriter
 # if the file isn't found, so this is fully optional.
 FONTS_DIR = os.path.join(os.path.dirname(__file__), "..", "fonts")
 FONTS = {
-    "helv_bold": os.path.join(FONTS_DIR, "Helvetica Bold.ttf"),  # <--- Helvetica Bold.ttf যুক্ত করা হলো
     "arial": os.path.join(FONTS_DIR, "arial.ttf"),
     "arial_bold": os.path.join(FONTS_DIR, "arialbd.ttf"),
     "tahoma": os.path.join(FONTS_DIR, "tahoma.ttf"),
@@ -46,6 +45,7 @@ BUILTIN_FONTS = {
     "cour": "cour",        # Courier
     "tiro": "tiro",        # Times Roman
 }
+
 
 def _make_qr_image(data: str) -> bytes:
     img = qrcode.make(str(data))
@@ -200,13 +200,34 @@ def fill_single_label(template_path: str, row: dict, field_config: list) -> byte
     page = doc[0]
 
     for field in field_config:
-        name = field["name"]
+        name = field.get("name")
+        ftype = field.get("type", "text")
+
+        # fixed_text needs no row lookup at all — it's a literal label the
+        # template itself doesn't print (used for pad.pdf, which is fully blank).
+        if ftype == "fixed_text":
+            font_size = field.get("font_size", 8)
+            color = field.get("color", [0, 0, 0])
+            color = tuple(c / 255 if c > 1 else c for c in color)
+            font_key = field.get("font", "helv")
+            fontname = "helv"
+            fontfile = None
+            if font_key in FONTS and os.path.exists(FONTS[font_key]):
+                fontname = font_key
+                fontfile = FONTS[font_key]
+            elif font_key in BUILTIN_FONTS:
+                fontname = BUILTIN_FONTS[font_key]
+            page.insert_text(
+                (field["x"], field["y"]), field.get("text", ""), fontsize=font_size,
+                color=color, fontname=fontname, fontfile=fontfile,
+            )
+            continue
+
         if name not in row:
             continue
         value = _clean(row[name])
 
         x, y = field["x"], field["y"]
-        ftype = field.get("type", "text")
 
         cover = field.get("cover")
         if cover:
@@ -266,6 +287,19 @@ def fill_single_label(template_path: str, row: dict, field_config: list) -> byte
     out = doc.tobytes()
     doc.close()
     return out
+
+
+def compose_pdf_into_rect(base_doc, page_index, rect, source_pdf_bytes):
+    """
+    Place a whole generated single-page PDF (e.g. an already-filled Inner or
+    Outer label) into a rectangle on another PDF's page — used to build the
+    "pad" by compositing separately-generated Inner/Outer labels onto the
+    blank pad template, rather than duplicating their field mappings.
+    """
+    page = base_doc[page_index]
+    src_doc = fitz.open("pdf", source_pdf_bytes)
+    page.show_pdf_page(rect, src_doc, 0)
+    src_doc.close()
 
 
 def generate_multipage_pdf(template_path: str, rows: list, field_config: list) -> bytes:
