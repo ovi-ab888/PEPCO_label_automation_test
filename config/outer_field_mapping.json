@@ -20,11 +20,11 @@
   {
     "name": "Barcode_st1",
     "type": "barcode",
-    "x": 20.0,
+    "x": 19.0,
     "y": 100.0,
     "width": 460,
     "barcode_type": "ean13_vector",
-    "height_ratio": 0.18,
+    "height_ratio": 0.17,
     "block_ratio": 0.005,
     "guard_extra": 1.15
   },
