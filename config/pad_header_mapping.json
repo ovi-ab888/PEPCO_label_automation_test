@@ -2,5 +2,8 @@
   {"name": "Order_ID", "type": "text", "x": 95, "y": 133, "font_size": 9, "font": "helv", "prefix": ""},
   {"name": "Style", "type": "text", "x": 95, "y": 148, "font_size": 9, "font": "helv", "prefix": ""},
   {"name": "Supplier_product_code", "type": "text", "x": 97, "y": 163, "font_size": 9, "font": "helv", "prefix": ""},
-  {"name": "Colour", "type": "text", "x": 99, "y": 178, "font_size": 9, "font": "helv", "prefix": ""}
+  {"name": "Colour", "type": "text", "x": 99, "y": 178, "font_size": 9, "font": "helv", "prefix": ""},
+  {"name": "Item_classification", "type": "text", "x": 95, "y": 193, "font_size": 9, "font": "helv", "prefix": ""},
+  {"name": "Supplier_name", "type": "text", "x": 95, "y": 208, "font_size": 9, "font": "helv", "prefix": ""},
+  {"name": "today_date", "type": "text", "x": 95, "y": 223, "font_size": 9, "font": "helv", "prefix": ""}
 ]
