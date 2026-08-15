@@ -5,7 +5,7 @@
     "x": 97.0,
     "y": 132.0,
     "font_size": 9.0,
-    "font": "helv",
+    "font": "tahoma",
     "prefix": ""
   },
   {
@@ -14,7 +14,7 @@
     "x": 97.0,
     "y": 147.0,
     "font_size": 9.0,
-    "font": "helv",
+    "font": "tahoma",
     "prefix": ""
   },
   {
@@ -23,7 +23,7 @@
     "x": 97.0,
     "y": 162.0,
     "font_size": 9.0,
-    "font": "helv",
+    "font": "tahoma",
     "prefix": ""
   },
   {
@@ -32,7 +32,7 @@
     "x": 97.0,
     "y": 177.0,
     "font_size": 9.0,
-    "font": "helv",
+    "font": "tahoma",
     "prefix": ""
   },
   {
@@ -41,7 +41,7 @@
     "x": 606.0,
     "y": 86.0,
     "font_size": 9.0,
-    "font": "helv",
+    "font": "tahoma",
     "prefix": ""
   },
   {
@@ -50,7 +50,7 @@
     "x": 606.0,
     "y": 98.0,
     "font_size": 9.0,
-    "font": "helv",
+    "font": "tahoma",
     "prefix": ""
   },
   {
@@ -59,7 +59,7 @@
     "x": 472.0,
     "y": 51.0,
     "font_size": 9.0,
-    "font": "helv",
+    "font": "tahoma",
     "prefix": ""
   }
 ]
