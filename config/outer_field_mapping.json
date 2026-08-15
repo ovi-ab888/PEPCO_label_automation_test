@@ -5,7 +5,7 @@
     "x": 90.0,
     "y": 37.0,
     "font_size": 31.0,
-    "font": "helv_bold",
+    "font": "helvetica_bold",
     "prefix": ""
   },
   {
@@ -14,7 +14,7 @@
     "x": 82.0,
     "y": 84.0,
     "font_size": 33.0,
-    "font": "helv_bold",
+    "font": "helvetica_bold",
     "prefix": ""
   },
   {
@@ -34,7 +34,7 @@
     "x": 73.0,
     "y": 221.0,
     "font_size": 16.0,
-    "font": "helv_bold",
+    "font": "helvetica_bold",
     "prefix": ""
   },
   {
@@ -43,7 +43,7 @@
     "x": 98.0,
     "y": 264.0,
     "font_size": 28.0,
-    "font": "helv_bold",
+    "font": "helvetica_bold",
     "prefix": "",
     "suffix": ""
   }
