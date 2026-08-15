@@ -1,0 +1,6 @@
+[
+  {"name": "Order_ID", "type": "text", "x": 95, "y": 133, "font_size": 9, "font": "helv", "prefix": ""},
+  {"name": "Style", "type": "text", "x": 95, "y": 148, "font_size": 9, "font": "helv", "prefix": ""},
+  {"name": "Supplier_product_code", "type": "text", "x": 97, "y": 163, "font_size": 9, "font": "helv", "prefix": ""},
+  {"name": "Colour", "type": "text", "x": 99, "y": 178, "font_size": 9, "font": "helv", "prefix": ""}
+]
