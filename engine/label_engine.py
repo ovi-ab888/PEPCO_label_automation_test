@@ -248,6 +248,19 @@ def fill_single_label(template_path: str, row: dict, field_config: list) -> byte
             elif font_key in BUILTIN_FONTS:
                 fontname = BUILTIN_FONTS[font_key]
 
+            # "align": "center" centers the text horizontally within a box.
+            # Default box = [x, x+114] (the inner-label gray bar width) unless
+            # the field gives its own "center_in": [x0, x1].
+            align = field.get("align", "left")
+            if align == "center":
+                try:
+                    font_obj = fitz.Font(fontfile=fontfile) if fontfile else fitz.Font(fontname)
+                    text_width = font_obj.text_length(text_out, fontsize=font_size)
+                except Exception:
+                    text_width = fitz.get_text_length(text_out, fontname=fontname, fontsize=font_size)
+                box_x0, box_x1 = field.get("center_in", [x, x + 114])
+                x = box_x0 + ((box_x1 - box_x0) - text_width) / 2
+
             page.insert_text(
                 (x, y), text_out, fontsize=font_size, color=color,
                 fontname=fontname, fontfile=fontfile,
