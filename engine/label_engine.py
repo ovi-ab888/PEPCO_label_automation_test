@@ -197,6 +197,30 @@ def _clean(value):
     return str(value)
 
 
+def expand_tc_barcode_variants(row: dict, max_variants: int = 7) -> list:
+    """
+    A single Excel row can carry several TC_Number_stN / Barcode_stN pairs
+    (st1..st7) when one order covers several sizes on the same style/color.
+    Each filled pair becomes its own output page — everything else in the
+    row (Style, Colour, Product_name, qty, etc.) stays identical, only
+    TC_Number_st1 / Barcode_st1 get overwritten per page so the existing
+    single-variant field configs (which read TC_Number_st1/Barcode_st1) work
+    unchanged. Returns a list of row dicts, one per page.
+    Falls back to [row] unchanged if no stN pairs are filled at all (keeps
+    plain single-TC rows working exactly as before).
+    """
+    variants = []
+    for i in range(1, max_variants + 1):
+        tc_val = row.get(f"TC_Number_st{i}")
+        bc_val = row.get(f"Barcode_st{i}")
+        if _clean(tc_val) or _clean(bc_val):
+            new_row = dict(row)
+            new_row["TC_Number_st1"] = tc_val
+            new_row["Barcode_st1"] = bc_val
+            variants.append(new_row)
+    return variants if variants else [row]
+
+
 def fill_single_label(template_path: str, row: dict, field_config: list) -> bytes:
     """Fill ONE label (one Excel row) onto a copy of the template. Returns PDF bytes."""
     doc = fitz.open(template_path)
