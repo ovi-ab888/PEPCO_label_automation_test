@@ -191,6 +191,9 @@ def draw_ean13_vector(page, x0, y0, code13, target_width, color=(0, 0, 0),
 def _clean(value):
     if value is None or (isinstance(value, float) and value != value):  # NaN
         return ""
+    # pandas Timestamp / python datetime -> DD-MM-YYYY instead of raw "2026-08-16 00:00:00"
+    if hasattr(value, "strftime"):
+        return value.strftime("%d-%m-%Y")
     return str(value)
 
 
